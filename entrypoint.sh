@@ -11,11 +11,14 @@ if [ ! -f "$CONFIG" ]; then
 fi
 
 # 2. Force headless_mode = true — Docker has no display; forgetting this causes a silent hang
+# Use tmp file + cp (not sed -i) because sed -i does rename() which fails on single-file bind mounts
+_tmp=$(mktemp)
 if grep -q "headless_mode" "$CONFIG"; then
-    sed -i 's/^\(headless_mode\s*=\s*\).*/\1true/' "$CONFIG"
+    sed 's/^\(headless_mode\s*=\s*\).*/\1true/' "$CONFIG" > "$_tmp"
 else
-    sed -i '/^\[app\]/a headless_mode = true' "$CONFIG"
+    sed '/^\[app\]/a headless_mode = true' "$CONFIG" > "$_tmp"
 fi
+cp "$_tmp" "$CONFIG" && rm -f "$_tmp"
 echo "[INFO] headless_mode forced to true for Docker environment"
 
 # 3. Ensure data directories exist and redirect state JSON files to /app/data/
