@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  synconelap:
+    image: ghcr.io/fooooxxxx/synconelaptoxoss:latest
+    container_name: synconelap
+
+    volumes:
+      # settings.ini: read-write because Strava token refresh writes tokens back into it
+      - ./settings.ini:/app/settings.ini
+      # Downloaded FIT/GPX/TCX activity files
+      - ./downloads:/app/downloads
+      # State JSON files (upload history, dedup tracking) — survives container restarts
+      - ./data:/app/data
+
+    environment:
+      # Cron expression for scheduled runs, e.g. "0 6 * * *" = daily at 06:00
+      # Leave empty (or remove) to run once and exit
+      CRON_SCHEDULE: ""
+
+    # Uncomment ONLY for first-time Strava OAuth authorization (--strava-auth mode)
+    # ports:
+    #   - "8765:8765"
+
+    restart: unless-stopped
+
+    deploy:
+      resources:
+        limits:
+          memory: 1G
