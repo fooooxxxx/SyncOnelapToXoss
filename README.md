@@ -140,6 +140,71 @@ python3 SyncOnelapToXoss.py
     python SyncOnelapToXoss.py
     ```
 
+## 🐳 Docker 运行
+
+### 前提条件
+
+- 已安装 Docker（和 Docker Compose）
+- 已准备好 `settings.ini`（从 `settings.ini.example` 复制并填入账号信息）
+
+> **注意**：Docker 模式下 `headless_mode` 会被自动强制设置为 `true`，无需手动修改。
+
+### 镜像地址
+
+```
+ghcr.io/fooooxxxx/synconelaptoxoss:latest
+```
+
+### 方式一：docker run（一次性运行）
+
+```bash
+docker run --rm \
+  -v ./settings.ini:/app/settings.ini \
+  -v ./downloads:/app/downloads \
+  -v ./data:/app/data \
+  ghcr.io/YOUR_GITHUB_USERNAME/synconelaptoxoss:latest
+```
+
+### 方式二：Docker Compose（推荐，支持定时运行）
+
+1. 将仓库中的 `docker-compose.yml` 复制到本地目录
+2. 将 `settings.ini.example` 复制为 `settings.ini` 并填入账号信息
+3. 编辑 `docker-compose.yml`，按需设置定时计划：
+
+```yaml
+environment:
+  CRON_SCHEDULE: "0 6 * * *"   # 每天 06:00 自动同步
+```
+
+4. 启动服务：
+
+```bash
+docker compose up -d          # 后台启动
+docker compose logs -f        # 实时查看日志
+```
+
+留空 `CRON_SCHEDULE: ""` 则为一次性运行后退出。
+
+#### 环境变量
+
+| 变量 | 默认值 | 说明 |
+|------|--------|------|
+| `CRON_SCHEDULE` | （空） | Cron 表达式，空则一次性运行。|
+
+### Strava 首次授权（Docker 模式）
+
+首次使用 Strava 时需要 OAuth 授权。取消注释 `docker-compose.yml` 中的 `ports` 配置，然后运行：
+
+```bash
+docker run --rm -p 8765:8765 \
+  -v ./settings.ini:/app/settings.ini \
+  ghcr.io/YOUR_GITHUB_USERNAME/synconelaptoxoss:latest --strava-auth
+```
+
+终端会打印授权 URL，在**宿主机浏览器**中打开该 URL 完成授权。授权后 token 自动写回 `settings.ini`。
+
+---
+
 ## ⚙️ 业务场景与配置
 
 本工具支持多种同步场景，请根据需求修改 `settings.ini`：

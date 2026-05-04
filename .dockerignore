@@ -1,0 +1,69 @@
+# Sensitive config — provided via volume mount at runtime
+settings.ini
+settings.local.ini
+
+# State files — provided via volume mount at runtime
+strava_upload_state.json
+onelap_download_state.json
+*.json
+
+# Downloaded activity files — provided via volume mount
+downloads/
+download_igps/
+incremental_sync/
+incremental_test/
+data/
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+.Python
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+*.spec
+*.zip
+*.tar.gz
+_release_*/
+
+# Development and test files
+test_*.py
+analyze_*.py
+*_test.py
+debug_*.py
+
+# IDE and OS files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Git internals
+.git/
+.gitignore
+.gitattributes
+
+# CI/CD — not needed inside the image
+.github/
+
+# Documentation
+*.md
+*.txt
+
+# Temp files
+*.tmp
+*.log
+/tmp/
