@@ -59,9 +59,10 @@ Thumbs.db
 # CI/CD — not needed inside the image
 .github/
 
-# Documentation
+# Documentation (keep requirements.txt — it's needed by the build)
 *.md
-*.txt
+使用说明.txt
+RELEASE_NOTES*
 
 # Temp files
 *.tmp
